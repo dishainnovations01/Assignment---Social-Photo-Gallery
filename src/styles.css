@@ -1,4 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "./assets/showcase/styles/primeng.css";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/quill/dist/quill.snow.css";
+@import "./assets/showcase/styles/flags.css";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
