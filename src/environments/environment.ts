@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  base_url: 'http://localhost:4000/',
+  image_url: '',
+  authKey:'abc',
+  baseImageUrl: 'G:\\angular-real\\invoicink_garments_api\\',
+  userId:'62bc34d9e550c2398c06e9fe',
+  shopId:'62bc2db356f9062a0c65ead6'
+  // imageUrlEnd: '?alt=media&token=sfsdfsd',
 };
 
 /*

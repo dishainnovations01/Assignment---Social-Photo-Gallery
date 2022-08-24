@@ -1,0 +1,16 @@
+<form class="form theme-form" style="overflow-y: auto;padding: 5px;overflow-x: hidden;" >
+
+<div class="row">
+
+    <div class="col-lg-10">
+        <!-- <input type="file" value="Add Image" accept='image/*' id="filed" (change)="handleLogoFileInput($event)" style="word-wrap: break-word;overflow:auto;width: 200px;"> -->
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" accept='image/*' name="imageName" (change)="CreateBase64String($event)" />
+        </div>
+    </div>
+    
+</div>
+  </form>
+  <div class="col-lg-2">
+    <button class="btn btn-primary" (click)="save()">Save</button>&nbsp;
+</div>
