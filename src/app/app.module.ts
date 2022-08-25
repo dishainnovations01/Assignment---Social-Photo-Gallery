@@ -9,10 +9,16 @@ import { PrimeNGModule } from './primeng.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorService } from './services/interceptor.service';
+import { CommonModule } from '@angular/common'
+import { PhotoGalleryComponent } from './photo-gallery/photo-gallery.component';
+import { LoginComponent } from './login/login.component';
+
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [	
+    AppComponent,
+    PhotoGalleryComponent,
+      LoginComponent
+   ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -20,7 +26,8 @@ import { InterceptorService } from './services/interceptor.service';
     MaterialModule,
     PrimeNGModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CommonModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },],
   bootstrap: [AppComponent]

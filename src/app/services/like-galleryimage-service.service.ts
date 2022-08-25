@@ -6,21 +6,21 @@ import { PhotoGallery } from '../models/photo-gallery';
 @Injectable({
   providedIn: 'root'
 })
-export class PhotoGalleryService {
-  _url = 'photogallery/';
+export class LikeGalleryImageService {
+  _url = 'likedislike/';
 
   constructor(private http:HttpClient) {}
 
   getGallery(headers: any,params:HttpParams): Observable<any> {
-    return this.http.get<any>(this._url+"byuser", { headers: headers,params: params });
+    return this.http.get<any>(this._url, { headers: headers,params: params });
   }
 
-  insertGalleryImage(data: any) {
-    return this.http.post<PhotoGallery>(this._url, data);
+  likeGalleryImage(data: any) {
+    return this.http.post<LikeGalleryImageService>(this._url, data);
   }
 
   updateGalleryImage(data: any) {
-    return this.http.patch<PhotoGallery>(this._url, data);
+    return this.http.patch<LikeGalleryImageService>(this._url, data);
   }
 
   deleteGalleryImage(data: any) {
