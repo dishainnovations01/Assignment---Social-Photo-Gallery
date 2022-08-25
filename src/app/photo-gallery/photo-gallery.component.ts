@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhotoGallery } from '../models/photo-gallery';
 import { PhotoGalleryService } from '../services/photo-gallery-service.service';
@@ -9,6 +9,7 @@ import { LikeGalleryImageService } from '../services/like-galleryimage-service.s
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { User } from '../models/user';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-photo-gallery',
@@ -30,6 +31,8 @@ export class PhotoGalleryComponent implements OnInit {
     private router: ActivatedRoute
   ) {
   }
+  @ViewChild('login') login?: NgForm;
+
   @HostListener('window:scroll', ['$event'])
   onWindowScroll($event: any) {
     console.log($event)
@@ -47,9 +50,7 @@ export class PhotoGalleryComponent implements OnInit {
     this.params = this.params.set("_id", this.userId)
     console.log("safsafsa" + this.params)
     this.userservice.getUserDetails(this.params).subscribe((result) => {
-      console.log("sfasfsaf", result)
       this.user = result;
-
     });
     this.photogallery = new PhotoGallery()
     this.fillData();
@@ -101,6 +102,8 @@ export class PhotoGalleryComponent implements OnInit {
       (result: any) => {
         this.photogalleryList?.push(result);
         this.openSnackBar('Image saved successfully', 'SAVED');
+        this.photogallery = new PhotoGallery()
+
       },
       (err: HttpErrorResponse) => {
         this.openSnackBar('Category cannot be saved.', 'ERROR');

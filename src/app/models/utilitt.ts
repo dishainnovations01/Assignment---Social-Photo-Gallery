@@ -14,9 +14,8 @@ export const Utility = Object.freeze({
 
 
 export class ScrollEvent {
-	public static ReachedToEnd($event: { target: { offsetHeight: any; scrollTop: any; scrollHeight: number; }; }): boolean {
+	public static ReachedToEnd($event: any): boolean {
 		if ($event.target.offsetHeight + $event.target.scrollTop >= $event.target.scrollHeight - 2) {
-			console.log("ddd")
 			return true;
 		} else {
 			console.log("ddd4")
