@@ -27,7 +27,7 @@ import { LoginComponent } from './login/login.component';
     PrimeNGModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    CommonModule
+    CommonModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },],
   bootstrap: [AppComponent]

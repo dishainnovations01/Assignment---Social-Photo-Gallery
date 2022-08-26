@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { User } from '../models/user';
 import { NgForm } from '@angular/forms';
+import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-photo-gallery',
@@ -23,13 +24,21 @@ export class PhotoGalleryComponent implements OnInit {
   userId: string = ""
   params = new HttpParams;
   user?: User
+  socket?: WebSocket;
+
   constructor(
     private _snackBar: MatSnackBar,
     private photogalleryservice: PhotoGalleryService,
     private likephotogalleryservice: LikeGalleryImageService,
     private userservice: LoginService,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    
   ) {
+    this.socket = new WebSocket(environment.WS_URL);
+
+    this.socket?.addEventListener('open', function (event) {
+      console.log("Connected...");
+    });
   }
   @ViewChild('login') login?: NgForm;
 
@@ -42,6 +51,8 @@ export class PhotoGalleryComponent implements OnInit {
     }
   }
 
+  
+  
   ngOnInit(): void {
     this.router.queryParams.subscribe(res => {
       this.userId = res["userId"].toString()
@@ -51,6 +62,17 @@ export class PhotoGalleryComponent implements OnInit {
     console.log("safsafsa" + this.params)
     this.userservice.getUserDetails(this.params).subscribe((result) => {
       this.user = result;
+    });
+    this.socket?.addEventListener('message', (event) => {
+      let resData = JSON.parse(event.data)
+      this.photogalleryList.forEach(elemement => {
+        if (elemement._id == resData._id) {
+          elemement.liked = resData.liked
+          elemement.disliked = resData.disliked
+          elemement.dislikeReactions = resData.dislikeReactions
+          elemement.likeReactions = resData.likeReactions
+        }
+      })
     });
     this.photogallery = new PhotoGallery()
     this.fillData();

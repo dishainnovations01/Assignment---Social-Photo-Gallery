@@ -8,7 +8,7 @@ export const environment = {
   image_url: '',
   authKey:'abc',
   baseImageUrl: 'http://localhost:4000/',
-
+  WS_URL: 'ws://localhost:8081/'
   // imageUrlEnd: '?alt=media&token=sfsdfsd',
 };
 
