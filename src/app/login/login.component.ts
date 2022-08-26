@@ -18,7 +18,10 @@ password: string = ""
     ) { }
 
   ngOnInit() {
-
+    let userDataId = localStorage.getItem("user") || "";
+    if(userDataId!=""){
+      this.rooute.navigateByUrl('/dashboard')
+    }
   }
 
   login(){
@@ -28,11 +31,11 @@ password: string = ""
     }
     this.loginservice.login(data).subscribe(
       result =>{
-        console.log(result)
-        this.rooute.navigateByUrl('/dashboard?userId='+result._id)
+        localStorage.setItem("user",result._id);
+        this.rooute.navigateByUrl('/dashboard')
       },
       (err: HttpErrorResponse) => {
-        this.openSnackBar('Cannot Like image.', 'ERROR');
+        this.openSnackBar('Username or Password is incorrect!.', 'ERROR');
       }
     )
   }

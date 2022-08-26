@@ -6,11 +6,10 @@ import { PhotoGalleryService } from '../services/photo-gallery-service.service';
 import { ScrollEvent, Utility } from 'src/app/models/utilitt';
 import { environment } from 'src/environments/environment';
 import { LikeGalleryImageService } from '../services/like-galleryimage-service.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { User } from '../models/user';
 import { NgForm } from '@angular/forms';
-import { webSocket } from 'rxjs/webSocket';
 
 @Component({
   selector: 'app-photo-gallery',
@@ -31,8 +30,8 @@ export class PhotoGalleryComponent implements OnInit {
     private photogalleryservice: PhotoGalleryService,
     private likephotogalleryservice: LikeGalleryImageService,
     private userservice: LoginService,
-    private router: ActivatedRoute,
-    
+    private rooute: Router
+
   ) {
     this.socket = new WebSocket(environment.WS_URL);
 
@@ -54,16 +53,19 @@ export class PhotoGalleryComponent implements OnInit {
   
   
   ngOnInit(): void {
-    this.router.queryParams.subscribe(res => {
-      this.userId = res["userId"].toString()
-      console.log("........." + this.userId) //will give query params as an object
-    })
-    this.params = this.params.set("_id", this.userId)
-    console.log("safsafsa" + this.params)
-    this.userservice.getUserDetails(this.params).subscribe((result) => {
-      this.user = result;
-    });
+     this.userId = localStorage.getItem("user") || "";
+    let userDataId = localStorage.getItem("user") || "";
+    this.params = this.params.set("_id", userDataId)
+    if(userDataId==""){
+      this.rooute.navigateByUrl('/login')
+    }else{
+      this.userservice.getUserDetails(this.params).subscribe((result) => {
+        this.user = result;
+      });
+    }
+
     this.socket?.addEventListener('message', (event) => {
+      console.log(JSON.parse(event.data))
       let resData = JSON.parse(event.data)
       this.photogalleryList.forEach(elemement => {
         if (elemement._id == resData._id) {
@@ -83,7 +85,8 @@ export class PhotoGalleryComponent implements OnInit {
       page: this.page.toString(),
       limit: "10",
     };
-    this.params = this.params.set("userId", this.userId)
+    let userDataId = localStorage.getItem("user") || "";
+    this.params = this.params.set("userId", userDataId)
     this.photogalleryservice.getGallery(headers, this.params).subscribe((result) => {
       console.log(result)
       this.photogalleryList?.push(...result);
@@ -128,7 +131,7 @@ export class PhotoGalleryComponent implements OnInit {
 
       },
       (err: HttpErrorResponse) => {
-        this.openSnackBar('Category cannot be saved.', 'ERROR');
+        this.openSnackBar('Image cannot be saved.', 'ERROR');
       }
     );
 
@@ -188,17 +191,23 @@ export class PhotoGalleryComponent implements OnInit {
 
 
   deleteimage(imageId: string) {
+    if (confirm("Are You sure you want to delete the image!")) {
+      this.photogalleryservice.deleteGalleryImage(imageId).subscribe(
+        (result: any) => {
+  
+          this.photogalleryList?.splice(this.photogalleryList.findIndex(ele => ele._id == imageId), 1);
+          this.openSnackBar('Image Deleted Successfully', '');
+        },
+        (err: HttpErrorResponse) => {
+          this.openSnackBar('Cannot Delete Image.', 'ERROR');
+        }
+      );
+    }
 
-    this.photogalleryservice.deleteGalleryImage(imageId).subscribe(
-      (result: any) => {
-
-        this.photogalleryList?.splice(this.photogalleryList.findIndex(ele => ele._id == imageId), 1);
-        this.openSnackBar('Image Deleted Successfully', '');
-      },
-      (err: HttpErrorResponse) => {
-        this.openSnackBar('Cannot Delete Image.', 'ERROR');
-      }
-    );
+  }
+  logOut() {
+    localStorage.clear()
+    this.rooute.navigateByUrl('/login')
   }
 
   openSnackBar(message: string, action: string) {

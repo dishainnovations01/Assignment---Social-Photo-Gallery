@@ -1,23 +1,7 @@
-<script>
-    // Create WebSocket connection.
-    const socket = new WebSocket('ws://localhost:8081');
-
-    // Connection opened
-    socket.addEventListener('open', function (event) {
-        console.log('Connected to WS Server')
-    });
-
-    // Listen for messages
-    socket.addEventListener('message', function (event) {
-        console.log("dddd")
-        document.getElementById("myDIV").innerHTML += event.data + "<br>";
-    });
-
-    const sendMessage = () => {
-        socket.send('Hello From Client2!');
-    }
-</script>
 <div class="col-lg-12" style="overflow-y: auto;overflow-x: hidden;height: 100vh" (scroll)="onWindowScroll($event)">
+    <button class="btn btn-primary" (click)="logOut()" style="cursor: pointer;float: right;margin-top: 10px;">
+        Logout
+    </button>
     <div class="col-lg-12 row" style="margin-top: 30px" *ngIf="user?.userType=='Admin'">
         <div class="col-lg-2"></div>
             <div class="col-lg-6">
@@ -50,12 +34,15 @@
             <div class="row" style="margin: 15px">
                 <div class="col-lg-6">
                     <div>
-                        <span *ngIf="photo.liked" class="material-icons" (click)="like(photo._id)" style="cursor: pointer;color: blue">
+                        <span *ngIf="photo.liked" class="material-icons" style="cursor: pointer;color: blue">
                             thumb_up
                         </span>
-                        <span *ngIf="!photo.liked" class="material-icons" (click)="like(photo._id)" style="cursor: pointer;color: blue">
+                        <span *ngIf="user?.userType=='Admin'&&!photo.liked" class="material-icons" style="cursor: pointer;color: blue">
                             thumb_up_off_alt
-                        </span>   
+                        </span>
+                        <span *ngIf="user?.userType!='Admin'&&!photo.liked" class="material-icons" (click)="like(photo._id)" style="cursor: pointer;color: blue">
+                            thumb_up_off_alt
+                        </span>  
                     </div>
                     <div>
                         {{photo.likeReactions}}
@@ -63,13 +50,15 @@
                 </div>
                 <div class="col-lg-6">
                     <div>
-                        <span *ngIf="photo.disliked" class="material-icons" (click)="unlike(photo._id)" style="cursor: pointer;color: red">
+                        <span *ngIf="photo.disliked" class="material-icons" style="cursor: pointer;color: red">
                             thumb_down
                         </span>
-                        <span *ngIf="!photo.disliked" class="material-icons" (click)="unlike(photo._id)" style="cursor: pointer;color: red">
+                        <span *ngIf="user?.userType=='Admin'&&!photo.disliked" class="material-icons" style="cursor: pointer;color: red">
                             thumb_down_off_alt
                         </span>
-
+                        <span *ngIf="user?.userType!='Admin'&&!photo.disliked" class="material-icons" (click)="unlike(photo._id)" style="cursor: pointer;color: red">
+                            thumb_down_off_alt
+                        </span>
                     </div>
                     <div>
                         {{photo.dislikeReactions}}
